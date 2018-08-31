@@ -1,0 +1,33 @@
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	  xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+</head>
+<body>
+<div th:fragment="footer">
+    <div class="container">
+
+        <footer class="sticky-footer">
+        <!-- this is footer -->
+		
+      </div>
+            <span sec:authorize="isAuthenticated()">
+               Logged user: <span sec:authentication="name"></span> |
+                Roles: <span sec:authentication="principal.authorities"></span> |
+                <a th:href="@{/logout}">Sign Out</a>
+            </span>
+		<div class="container">
+        <div class="text-center">
+          <small>Copyright © Shadwolf 2018</small>
+        </div>
+         <a class="scroll-to-top rounded" href="#page-top">
+      <i class="fa fa-angle-up"></i>
+    </a>
+     <!-- <script type="text/javascript"
+                src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+ -->   
+        </footer>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<hsts />
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta name="author" content="">
+<title>SB Admin - Start Bootstrap Template</title>
+<!-- Bootstrap core CSS-->
+<link rel="stylesheet"
+	th:href="@{/webjars/bootstrap/4.1.0/css/bootstrap.min.css}" />
+
+<!-- Custom fonts for this template-->
+<link rel="stylesheet"
+	th:href="@{/webjars/font-awesome/5.1.0/css/all.css}" />
+
+<!-- Page level plugin CSS-->
+<link rel="stylesheet"
+	th:href="@{/webjars/datatables/1.10.16/css/dataTables.bootstrap4.css}" />
+
+<!-- Custom styles for this template-->
+<link href="css/sb-admin.css" rel="stylesheet">
+<!-- oldies
+    <link href="vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  	<link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  
+   -->
+
+</head>
+
+<body class="fixed-nav sticky-footer bg-dark" id="page-top">
+	<!-- Menu -->
+	<nav th:replace="fragments/menu :: menu" />
+	<div th:replace="fragments/logout :: logout"/>
+	<!-- Contenido -->
+	<div th:with="varMsg=${varMsg}; varForm=${varForm}; varList=${varList}" 
+	th:replace="@{'fragments/contents/' + ${page}} :: ${page}" />
+		<!-- /.container-fluid-->
+		<!-- /.content-wrapper-->
+		<div th:replace="fragments/footer :: footer" />
+		
+		<!-- Bootstrap core JavaScript-->
+		<script th:src="@{/webjars/jquery/3.1.1/jquery.min.js}"></script>
+		<script th:src="@{/webjars/bootstrap/4.1.0/js/bootstrap.min.js}"></script>
+		<script th:src="@{/webjars/chart.js/2.7.2/dist/Chart.min.js}"></script>
+		<script
+			th:src="@{/webjars/datatables/1.10.16/js/dataTables.bootstrap4.min.js}"></script>
+	
+		<!-- <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+     -->
+		<!-- Core plugin JavaScript-->
+		<!--   <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+     -->
+		<!-- Page level plugin JavaScript-->
+		<!--
+    <script src="vendor/chart.js/Chart.min.js"></script>
+    <script src="vendor/datatables/jquery.dataTables.js"></script>
+    <script src="vendor/datatables/dataTables.bootstrap4.js"></script>
+   -->
+		<!-- Custom scripts for all pages-->
+		<script src="js/sb-admin.min.js"></script>
+		<!-- Custom scripts for this page-->
+		<script src="js/sb-admin-datatables.min.js"></script>
+		<script src="js/sb-admin-charts.min.js"></script>
+	</div>	
+</body>
+</html>

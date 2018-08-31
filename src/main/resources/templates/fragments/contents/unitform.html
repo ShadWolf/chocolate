@@ -1,0 +1,55 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head></head>
+<body>
+	<!-- Gestion utilisateur-->
+	<div th:fragment="unitform">
+		<div class="content-wrapper">
+			<div class="container-fluid">
+				<!-- Breadcrumbs-->
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+					<li class="breadcrumb-item active">Unit&eacute;</li>
+				</ol>
+				<form class="form-horizontal" role="form" action="#"
+					th:object="${varForm}" th:action="@{/unitadd}" method="post">
+					<div class="form-group">
+					
+						<label class="col-xs-2 control-label">Nom unit&eacute;:</label>
+						<div class="col-xs-5">
+							<input th:field="*{name}" class="form-control" />
+						</div>
+						<label class="col-xs-2 control-label">Abr&eacute;viation:</label>
+						<div class="col-xs-5">
+							<input th:field="*{simbol}" class="form-control" />
+						</div>
+					
+						<label class="col-xs-2 control-label">Montant conversion</label>
+						<div class="col-xs-5">
+							<input th:field="*{convamount}" class="form-control" />
+						</div>
+						<label class="col-xs-2 control-label">Unit&eacute;
+							Conversion</label>
+						<div class="col-xs-5">
+							<select class="form-control" id="convunitlst"
+							onChange="$('#unitidh').val($(this).val()); console.log($(this).val())">
+								<option value="">Choisir Unit&eacute;</option>
+								<option th:each="unit : ${unitlist}" th:value="${unit.id}"
+									th:text="${unit.name}"></option>
+							</select>
+						</div>
+						<input id="unitidh" type="hidden" value="$('#convunitlst').val()" th:field="*{unitid}"
+						<label class="col-xs-2 control-label">Unit&eacute; de base</label>
+						<div class="col-xs-5">
+							<input type="checkbox" name="active"
+								th:checked="*{baseunit} ? 'checked'" class="form-control" />
+
+						</div>
+					</div>
+					<button class="btn btn-success" type="submit" >Enregistrer</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head></head>
+<body>
+	<!-- Gestion utilisateur-->
+	<div th:fragment="stockforms">
+		<div class="content-wrapper">
+			<div class="container-fluid">
+				<!-- Breadcrumbs-->
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+					<li class="breadcrumb-item active">Stocks</li>
+				</ol>
+				<!-- mESSAGE ok -->
+				<div class="alert alert-success"
+					th:if="${not #strings.isEmpty(varMsg)}">
+					<p th:text="${varMsg}"></p>
+				</div>
+				<a class="btn btn-primary" href="/unitform" >Ajouter une unit&eacute;</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
