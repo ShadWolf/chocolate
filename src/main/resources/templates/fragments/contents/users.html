@@ -25,13 +25,15 @@
 					<table class="table table-striped">
 						<tr>
 							<th>Pr&eacute;nom</th>
-							<th>Nom de famille</th>
 							<th>Mot de passe</th>
+							<th>Roles</th>
+							<th></th>	
 						</tr>
 						<tr th:each="user : ${varList}">
-							<td th:text="${user.name}"></td>
-							<td th:text="${user.surname}"></td>
-							<td th:text="${user.password}"></td>
+							<td th:text="${user.username}"></td>
+							<td th:text="${user.encryptedPassword}"></td>
+							
+							<td th:each="r : ${user.roles}" th:text="${r.role}"></td>
 						</tr>
 					</table>
 				</div>
@@ -54,18 +56,11 @@
 								<form role="form" class="form-horizontal" action="#"
 									th:object="${varForm}" th:action="@{/useradd}" method="post">
 									<div class="form-group">
-										<label class="col-xs-2 control-label">Pr&eacute;nom</label>
+										<label class="col-xs-2 control-label">Nom</label>
 										<div class="col-xs-5">
-											<input th:field="*{name}" class="form-control" />
+											<input th:field="*{username}" class="form-control" />
 										</div>
 									</div>
-									<div class="form-group">
-										<label class="col-xs-2 control-label">Nom de Famille</label>
-										<div class="col-xs-5">
-											<input th:field="*{surname}" class="form-control" />
-										</div>
-									</div>
-
 									<div class="form-group">
 										<label class="col-xs-2 control-label">Mot de passe </label>
 										<div class="col-xs-5">

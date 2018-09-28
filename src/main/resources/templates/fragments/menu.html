@@ -18,11 +18,12 @@
 			<ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
 				<li class="nav-item" data-toggle="tooltip" data-placement="right"
 					title="Dashboard"><a class="nav-link" href="dashboard" th:href="dashboard">
-						<i class="fa fa-fw fa-dashboard"></i> <span class="nav-link-text">Dashboard</span>
+						<i class="fas fa-fw fa-tachometer-alt"></i> <span class="nav-link-text">Dashboard</span>
 				</a></li>
+			
 				<li class="nav-item" data-toggle="tooltip" data-placement="right"
-					title="Charts"><a class="nav-link" href="users" th:href="users"> <i
-						class="fa fa-fw fa-users"></i> <span class="nav-link-text">Utilisateurs</span>
+					title="Recettes"><a class="nav-link" href="/receip"> <i
+						class="fas fa-fw fa-mortar-pestle"></i> <span class="nav-link-text">Recettes</span>
 				</a></li>
 				<li class="nav-item" data-toggle="tooltip" data-placement="right"
 					title="Stocks"><a class="nav-link" href="/stocks"> <i
@@ -30,8 +31,15 @@
 				</a></li>
 				<li class="nav-item" data-toggle="tooltip" data-placement="right"
 					title="Charts"><a class="nav-link" href="charts" th:href="charts"> <i
-						class="fa fa-fw fa-area-chart"></i> <span class="nav-link-text">Charts</span>
+						class="fa fa-fw fas fa-chart-line"></i> <span class="nav-link-text">Statistics</span>
 				</a></li>
+				
+					<li sec:authorize="hasAuthority('ADMIN')" class="nav-item" data-toggle="tooltip" data-placement="right"
+					title="Charts"><a class="nav-link" href="users" th:href="users"> <i
+						class="fa fa-fw fa-users"></i> <span class="nav-link-text">Utilisateurs</span>
+					</a></li>
+					
+				
 				<li class="nav-item" data-toggle="tooltip" data-placement="right"
 					title="Components"><a
 					class="nav-link nav-link-collapse collapsed" data-toggle="collapse"
