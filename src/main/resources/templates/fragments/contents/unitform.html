@@ -9,9 +9,44 @@
 				<!-- Breadcrumbs-->
 				<ol class="breadcrumb">
 					<li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
-					<li class="breadcrumb-item active">Unit&eacute;</li>
+					<li class="breadcrumb-item active">Unit&eacute; de mesure</li>
 				</ol>
-				<form class="form-horizontal" role="form" action="#"
+				<!-- Lista de unidades -->
+				<div th:if="${not #lists.isEmpty(varList)}" >
+				  <h2>Liste des Unit&eacute;s de mesure</h2>
+				  <table class="table table-striped">
+				  <tr>
+				  		<th>Nombre</th>
+				  		<th>simbol</th>
+				  		<th>Conversion</th>
+				  		<th>Unite de base</th>
+				  </tr>
+				  <tr th:each="unit : ${varList}">
+							<td th:text="${unit.name}"></td>
+							<td th:text="${unit.simbol}"></td>
+							<td th:text=" ${unit.amount}"></td>
+							<td th:text=" ${unit.baseunit}"></td>
+						</tr>
+				  </table>
+				</div>
+				<div th:unless="${not #lists.isEmpty(varList)}" >
+					<h3>Il n'existe pas d'unit&eacute; de mesure enregistr&eacute;e!</h3>
+				</div>
+					<button type="button" id="unitModalLabel" class="btn btn-primary"
+					data-toggle="modal" data-target="#unitModal">Ajouter une
+					unit&eacute;</button>
+				<div class="modal fade" id="unitModal" tabindex="-1" role="dialog"
+					aria-labelledby="unitModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title">Ajouter une unit&eacute;</h5>
+								<button type="button" class="close" data-dismiss="modal">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body form-horizontal">
+					<form class="form-horizontal" role="form" action="#"
 					th:object="${varForm}" th:action="@{/unitadd}" method="post">
 					<div class="form-group">
 					
@@ -23,10 +58,10 @@
 						<div class="col-xs-5">
 							<input th:field="*{simbol}" class="form-control" />
 						</div>
-					
+						<div th:if="${not #lists.isEmpty(varList)}" >
 						<label class="col-xs-2 control-label">Montant conversion</label>
 						<div class="col-xs-5">
-							<input th:field="*{convamount}" class="form-control" />
+							<input th:field="*{amount}" class="form-control" />
 						</div>
 						<label class="col-xs-2 control-label">Unit&eacute;
 							Conversion</label>
@@ -34,21 +69,27 @@
 							<select class="form-control" id="convunitlst"
 							onChange="$('#unitidh').val($(this).val()); console.log($(this).val())">
 								<option value="">Choisir Unit&eacute;</option>
-								<option th:each="unit : ${unitlist}" th:value="${unit.id}"
+								<option th:each="unit : ${varList}" th:value="${unit.id}"
 									th:text="${unit.name}"></option>
 							</select>
 						</div>
-						<input id="unitidh" type="hidden" value="$('#convunitlst').val()" th:field="*{unitid}"
-						/>
-						<label class="col-xs-2 control-label">Unit&eacute; de base</label>
+						<input id="unitidh" type="hidden" value="$('#convunitlst').val()" 
+						th:field="*{unitparentid}" />
+						</div>
+					<!--  	
+			
+					<label class="col-xs-2 control-label">Unit&eacute; de base</label>
 						<div class="col-xs-5">
 							<input type="checkbox" name="active"
 								th:checked="*{baseunit} ? 'checked'" class="form-control" />
 
 						</div>
+						-->
 					</div>
 					<button class="btn btn-success" type="submit" >Enregistrer</button>
 				</form>
+				</div>
+			
 			</div>
 		</div>
 	</div>
