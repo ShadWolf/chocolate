@@ -35,5 +35,10 @@ public class UnityServiceImpl implements UnityService {
 		// TODO Auto-generated method stub
 		return repo.findAll();
 	}
+	
+	@Override
+	public void delId(Integer id) {
+		repo.deleteById(id);
+	}
 
 }

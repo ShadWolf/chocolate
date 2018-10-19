@@ -12,6 +12,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
@@ -25,15 +26,9 @@ public class UnityController {
 	public String showUnityForm(ModelMap model){
 		
 	  	UnityForm unitform =  new UnityForm();
-    	List<Unity> ul;
-    	//recuperar todas las unidades existente
-    	try {
-    		ul = unityService.listAll();
-    	} catch (Exception ex) {
-    		ul =  new ArrayList<>();	
-    	}
+	  	List<UnityForm> ufl = createListUnityForm();
     	model.addAttribute("page", "unitform");
-    	model.addAttribute("varList", ul);
+    	model.addAttribute("varList", ufl);
     	model.addAttribute("varForm", unitform );
     	/*
     	 * NOTA BENE:
@@ -49,6 +44,42 @@ public class UnityController {
     	 * */
     	return "mainpage";
 	}
+	private List<UnityForm> createListUnityForm(){
+	  	List<UnityForm> ufl = new ArrayList<>();
+	  	
+    	List<Unity> ul;
+    	//recuperar todas las unidades existente
+    	try {
+    		ul = unityService.listAll();
+    		
+    		for (Unity u : ul) {
+    			UnityForm e = new UnityForm();
+    			e.setName(u.getName());
+    			e.setSimbol(u.getSimbol());
+    			e.setId(u.getId().toString());
+    			if(u.getBaseunit() != null) {
+    				e.setBasename(u.getBaseunit().getName());
+    				e.setAmount(u.getAmount().toString());
+    			}
+    			ufl.add(e);
+    		}
+    	} catch (Exception ex) {}
+    	return ufl;
+	}
+	
+	/* Muestra Success on Delete*/
+	@GetMapping("/unitdelok")
+	public String showDelSucces(ModelMap model) {
+		model.addAttribute("page", "unitform");
+    	String msg = "Unite supprimee avec succes!";
+    	model.addAttribute("varMsg", msg);
+    	List<UnityForm> ufl = createListUnityForm();
+    	model.addAttribute("varList", ufl);
+    	UnityForm unitform = new UnityForm();
+    	model.addAttribute("varForm", unitform );	
+    	return "mainpage";
+	}
+	
 	// Add Unity
 	@PostMapping("/unitadd")
 	public String addUnity(@ModelAttribute UnityForm unitForm, ModelMap model) {
@@ -60,9 +91,15 @@ public class UnityController {
     	unityService.save( u );
   
     	//unit.setConvunit(UnityService.getById(unitForm.getUnitid()));
-    	msg = "Unit&eacute; enregistr&eacure;e avec succ&eagrave;s!";
-    	model.addAttribute("page", "stockforms");
+    	
+    	
+    	model.addAttribute("page", "unitform");
+    	msg = "Unite enregistre avec succes!";
     	model.addAttribute("varMsg", msg);
+    	List<UnityForm> ufl = createListUnityForm();
+    	model.addAttribute("varList", ufl);
+    	UnityForm unitform = new UnityForm();
+    	model.addAttribute("varForm", unitform );
     	return "mainpage";
 		// return "mainpage";
 	}
@@ -75,10 +112,10 @@ public class UnityController {
 			Integer id = Integer.valueOf(uform.getUnitparentid());
 			Unity un = unityService.findById(id);
 			u.setBaseunit( un );
-			u.setAmount(Long.valueOf(uform.getAmount()));
+			u.setAmount(Double.valueOf(uform.getAmount()));
 		} else {
 			u.setBaseunit(null);
-			u.setAmount(Long.valueOf("0"));
+			u.setAmount(Double.valueOf("0"));
 		}
 		u.setName(uform.getName());
 		u.setSimbol(uform.getSimbol());
@@ -86,4 +123,10 @@ public class UnityController {
 	}
 
 		// Remove Unity
+	@PostMapping("/unitdel/{id}")
+	public String delUnity(@PathVariable String id, ModelMap model) {
+		String msg = null;
+		unityService.delId(Integer.valueOf(id));
+		return "redirect:/unitdelok";
+	}
 }
