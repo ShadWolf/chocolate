@@ -20,7 +20,7 @@ public class UnityController {
 	@Autowired
 	private UnityService unityService;
 	
-	 
+	 private String varMsg;
 	// List Unity + formulario
 	@GetMapping("/unitform")
 	public String showUnityForm(ModelMap model){
@@ -28,6 +28,7 @@ public class UnityController {
 	  	UnityForm unitform =  new UnityForm();
 	  	List<UnityForm> ufl = createListUnityForm();
     	model.addAttribute("page", "unitform");
+    	model.addAttribute("varMsg", varMsg);
     	model.addAttribute("varList", ufl);
     	model.addAttribute("varForm", unitform );
     	/*
@@ -67,19 +68,7 @@ public class UnityController {
     	return ufl;
 	}
 	
-	/* Muestra Success on Delete*/
-	@GetMapping("/unitdelok")
-	public String showDelSucces(ModelMap model) {
-		model.addAttribute("page", "unitform");
-    	String msg = "Unite supprimee avec succes!";
-    	model.addAttribute("varMsg", msg);
-    	List<UnityForm> ufl = createListUnityForm();
-    	model.addAttribute("varList", ufl);
-    	UnityForm unitform = new UnityForm();
-    	model.addAttribute("varForm", unitform );	
-    	return "mainpage";
-	}
-	
+
 	// Add Unity
 	@PostMapping("/unitadd")
 	public String addUnity(@ModelAttribute UnityForm unitForm, ModelMap model) {
@@ -125,8 +114,8 @@ public class UnityController {
 		// Remove Unity
 	@PostMapping("/unitdel/{id}")
 	public String delUnity(@PathVariable String id, ModelMap model) {
-		String msg = null;
+		varMsg = "Unite supprimee avec succes!";
 		unityService.delId(Integer.valueOf(id));
-		return "redirect:/unitdelok";
+		return "redirect:/unitform";
 	}
 }

@@ -38,7 +38,9 @@
 	<nav th:replace="fragments/menu :: menu" />
 	<div th:replace="fragments/logout :: logout"/>
 	<!-- Contenido -->
-	<div th:with="varMsg=${varMsg}; varForm=${varForm}; varList=${varList};" 
+	<div 
+	th:with=
+"varMsg=${varMsg}; varErr=${varErr}; varForm=${varForm}; varList=${varList}; varListSec=${varListSec}; varListTre=${varListTre};" 
 	th:replace="@{'fragments/contents/' + ${page}} :: ${page}" />
 		<!-- /.container-fluid-->
 		<!-- /.content-wrapper-->

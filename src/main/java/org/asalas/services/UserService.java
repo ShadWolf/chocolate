@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface UserService {
-    void save(User user);
+    public void save(User user);
 
-    User findByUsername(String username);
-    List<User> listAll();
+    public User findByUsername(String username);
+    public List<User> listAll();
+    public void delId(Integer id);
+    public Long getSize();
 }

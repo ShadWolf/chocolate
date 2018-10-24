@@ -17,7 +17,11 @@
 				<!-- mESSAGE ok -->
 				<div class="alert alert-success"
 					th:if="${not #strings.isEmpty(varMsg)}">
-					<p th:text="#{varMsg}"></p>
+					<p th:text="${varMsg}"></p>
+				</div>
+				<div class="alert alert-danger"
+					th:if="${not #strings.isEmpty(varErr)}">
+					<p th:text="${varErr}"></p>
 				</div>
 				<!-- Lista de usuarios -->
 				<div th:if="${not #lists.isEmpty(varList)}">
@@ -27,13 +31,22 @@
 							<th>Pr&eacute;nom</th>
 							<th>Mot de passe</th>
 							<th>Roles</th>
-							<th></th>	
+							<th></th>
+							<th>suppr?</th>	
 						</tr>
 						<tr th:each="user : ${varList}">
 							<td th:text="${user.username}"></td>
 							<td th:text="${user.encryptedPassword}"></td>
-							
 							<td th:each="r : ${user.roles}" th:text="${r.role}"></td>
+							<td>
+								<form action="#" th:action="@{/usersdel/} + ${user.id}" method="POST"
+									id="deluserForm">
+									<input type="checkbox"
+										onchange="confirm('Supprimer utilisateur?') ? submit() : this.checked = false"
+										class="form-control" />
+								</form>
+							
+							</td>
 						</tr>
 					</table>
 				</div>

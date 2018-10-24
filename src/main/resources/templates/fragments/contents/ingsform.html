@@ -1,0 +1,118 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head></head>
+<body>
+	<!-- Gestion utilisateur-->
+	<div th:fragment="ingsform">
+		<div class="content-wrapper">
+			<div class="container-fluid">
+				<!-- Breadcrumbs-->
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+					<li class="breadcrumb-item active">Ingr&eacute;dients</li>
+				</ol>
+				<!-- mESSAGE ok -->
+				<div class="alert alert-success"
+					th:if="${not #strings.isEmpty(varMsg)}">
+					<p th:text="${varMsg}"></p>
+				</div>
+				<!-- Lista de unidades -->
+				<div th:if="${not #lists.isEmpty(varList)}">
+
+					<h2>Liste des Ingr&eacute;dients</h2>
+					<table class="table table-striped">
+						<tr>
+							<th>Nom</th>
+							<th>Alerg&egrave;ne?</th>
+							<th>Quantite</th>
+							<th>Unite</th>
+
+							<th>Suppr?</th>
+						</tr>
+						<tr th:each="ing : ${varList}">
+							<td th:text="${ing.name}"></td>
+						
+							 <td><input type="checkbox"
+								th:checked="${ing.alergene} ? 'checked'" disabled="disabled"></td>
+							 	
+							<td th:text="${ing.quantity}"></td>
+
+							<td th:text="${ing.unitname}"></td>
+							<td>
+								<form action="#" th:action="@{/ingdel/} + ${ing.id}"
+									method="POST">
+									<input type="checkbox"
+										onchange="confirm('Supprimer l inge?') ? submit() : this.checked = false"
+										class="form-control" />
+								</form>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div th:unless="${not #lists.isEmpty(varList)}">
+					<h3>Il n'existe pas d'ingr&eacute;dient enregistr&eacute;e!</h3>
+				</div>
+				<div th:if="${not #lists.isEmpty(varListSec)}">
+					<button type="button" id="ingModalLabel" class="btn btn-primary"
+						data-toggle="modal" data-target="#ingModal">Ajouter un
+						ingr&eacute;dient</button>
+					<div class="modal fade" id="ingModal" tabindex="-1" role="dialog"
+						aria-labelledby="ingModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title">Ajouter une ingr&eacute;dient</h5>
+									<button type="button" class="close" data-dismiss="modal">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body form-horizontal">
+									<form class="form-horizontal" role="form" action="#"
+										th:object="${varForm}" th:action="@{/ingadd}" method="post"
+										autocomplete="off">
+										<div class="form-group">
+											<label class="col-xs-2 control-label">Nom
+												ingr&eacute;dient:</label>
+											
+												<input th:field="*{name}" class="col-xs-3 form-control" />
+											
+											<label class="col-xs-2 control-label">Alerg&egrave;ne?:</label>
+											<div class="col-xs-3">
+												<input type="checkbox" th:field="*{alergene}"
+													class="form-control" />
+											</div>
+
+											<div th:if="${not #lists.isEmpty(varListSec)}">
+												<label class="col-xs-2 control-label">Unit&eacute; d'affichage</label>
+												<div class="col-xs-5">
+													<select class="form-control" id="convinglst"
+														onChange="$('#ingidh').val($(this).val()); console.log($(this).val())">
+														<option value="">Choisir Unit&eacute;</option>
+														<option th:each="unit : ${varListSec}"
+															th:value="${unit.id}" th:text="${unit.name}"></option>
+													</select>
+												</div>
+												<input id="ingidh" type="hidden"
+													value="$('#convinglst').val()" th:field="*{unitid}" />
+											</div>
+											<div th:unless="${not #lists.isEmpty(varListSec)}">
+												<h3>
+													La Liste des unit&eacute;es est vide! <br>
+													Cr&eacute;er au moins une unit&eacute;
+												</h3>
+											</div>
+
+										</div>
+										<button class="btn btn-success" type="submit">Enregistrer</button>
+									</form>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

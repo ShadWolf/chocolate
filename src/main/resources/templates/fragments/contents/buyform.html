@@ -1,0 +1,126 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head></head>
+<body>
+	<!-- Gestion utilisateur-->
+	<div th:fragment="buyform">
+		<div class="content-wrapper">
+			<div class="container-fluid">
+				<!-- Breadcrumbs-->
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+					<li class="breadcrumb-item active">Achats</li>
+				</ol>
+				<!-- mESSAGE ok -->
+				<div class="alert alert-success"
+					th:if="${not #strings.isEmpty(varMsg)}">
+					<p th:text="${varMsg}"></p>
+				</div>
+				<!-- Lista de unidades -->
+				<div th:if="${not #lists.isEmpty(varList)}">
+
+					<h2>Liste des Achats Ingr&eacute;dients</h2>
+					<table class="table table-striped">
+						<tr>
+							<th>Date</th>
+							<th>Ingredient</th>
+							<th>Quantite</th>
+							<th>Unite</th>
+							<th>Prix H.T</th>
+						</tr>
+						<tr th:each="achat : ${varList}">
+							<td th:text="${achat.date}"></td>
+							<td th:text="${achat.ingname}"></td>
+							<td th:text="${achat.quantity}"></td>
+							<td th:text="${achat.unitsimb}"></td>
+							<td th:text="${achat.priht}"></td>
+						</tr>
+					</table>
+				</div>
+				<div th:unless="${not #lists.isEmpty(varList)}">
+					<h3>Il n'existe pas d'Achats enregistr&eacute;e!</h3>
+				</div>
+				<div
+					th:if="${not #lists.isEmpty(varListSec) && not #lists.isEmpty(varListTre) } ">
+					<button type="button" id="ingModalLabel" class="btn btn-primary"
+						data-toggle="modal" data-target="#ingModal">Ajouter un
+						ingr&eacute;dient</button>
+					<div class="modal fade" id="ingModal" tabindex="-1" role="dialog"
+						aria-labelledby="ingModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title">Ajouter une ingr&eacute;dient</h5>
+									<button type="button" class="close" data-dismiss="modal">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body form-horizontal">
+									<form class="form-horizontal" role="form" action="#"
+										th:object="${varForm}" th:action="@{/buyadd}" method="post">
+										<div class="form-group">
+											<div th:if="${not #lists.isEmpty(varListSec)}">
+												<label class="col-xs-2 control-label">Ingr&eacute;dient</label>
+												<div class="col-xs-5">
+													<select class="form-control" id="inglst"
+														onChange="$('#ingidh').val($(this).val()); console.log($(this).val())">
+														<option value="">Choisir Ingr&eacute;dient</option>
+														<option th:each="ing : ${varListSec}" th:value="${ing.id}"
+															th:text="${ing.name}"></option>
+													</select>
+												</div>
+												<input id="ingidh" type="hidden"
+													value="$('#convinglst').val()" th:field="*{ingid}" />
+											</div>
+
+											<label class="col-xs-2 control-label">Quantit&eacute;</label>
+											<div class="col-xs-3">
+												<input th:field="*{quantity}" class="form-control" />
+											</div>
+
+											<div th:if="${not #lists.isEmpty(varListTre)}">
+												<label class="col-xs-2 control-label">Unit&eacute;
+													d'affichage</label>
+												<div class="col-xs-5">
+													<select class="form-control" id="unitlst"
+														onChange="$('#unitidh').val($(this).val()); console.log($(this).val())">
+														<option value="">Choisir Unit&eacute;</option>
+														<option th:each="unit : ${varListTre}"
+															th:value="${unit.id}" th:text="${unit.simbol}"></option>
+													</select>
+												</div>
+												<input id="unitidh" type="hidden"
+													value="$('#unitlst').val()" th:field="*{unitid}" />
+											</div>
+
+											<label class="col-xs-2 control-label">Prix H.T (en
+												Euros X.YY)</label>
+											<div class="col-xs-3">
+												<input th:field="*{priht}" class="form-control" />
+											</div>
+										</div>
+										<button class="btn btn-success" type="submit">Enregistrer</button>
+									</form>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+				<div th:unless="${not #lists.isEmpty(varListSec)}">
+					<div class="alert alert-danger">
+						La Liste des Ingr&eacute;dients est vide! <br> Cr&eacute;er
+						au moins un Ingr&eacute;dient
+					</div>
+				</div>
+				<div th:unless="${not #lists.isEmpty(varListTre)}">
+					<div class="alert alert-danger">
+						La Liste des unit&eacute;es est vide! <br> Cr&eacute;er au
+						moins une unit&eacute;
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

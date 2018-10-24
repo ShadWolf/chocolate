@@ -1,6 +1,5 @@
 package org.asalas.controllers;
 
-
 import java.util.List;
 
 import org.asalas.domain.Role;
@@ -20,110 +19,122 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.PathVariable;
-
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class UserController {
-   @Autowired
-    private UserService userService;
+	@Autowired
+	private UserService userService;
 
-   @Autowired
-   private RoleService roleService;
-   
-    @Autowired
-    private SecurityService securityService;
+	@Autowired
+	private RoleService roleService;
 
-    @Autowired
-    private UserValidator userValidator;
+	@Autowired
+	private SecurityService securityService;
 
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-    
+	@Autowired
+	private UserValidator userValidator;
 
-    @RequestMapping("/users")
-    public String showUsers(ModelMap model) {
-    	User user = new User(); 
-    	model.addAttribute("page", "users");
-    	model.addAttribute("varMsg", "");
-    	model.addAttribute("varList", userService.listAll());
-    	model.addAttribute("varForm", user );
-    	
-    	return "mainpage";
-    }
-    /*
-    @RequestMapping(value = "/registration", method = RequestMethod.GET)
-    public String registration(Model model) {
-        model.addAttribute("userForm", new User());
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-        return "registration";
-    }
+	private String varMsg = "";
+	private String varErr = "";
 
-    @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model) {
-        userValidator.validate(userForm, bindingResult);
+	@RequestMapping("/users")
+	public String showUsers(ModelMap model) {
+		User user = new User();
+		model.addAttribute("page", "users");
+		model.addAttribute("varMsg", varMsg);
+		model.addAttribute("varErr", varErr);
+		model.addAttribute("varList", userService.listAll());
+		model.addAttribute("varForm", user);
+		return "mainpage";
+	}
+	/*
+	 * @RequestMapping(value = "/registration", method = RequestMethod.GET) public
+	 * String registration(Model model) { model.addAttribute("userForm", new
+	 * User());
+	 * 
+	 * return "registration"; }
+	 * 
+	 * @RequestMapping(value = "/registration", method = RequestMethod.POST) public
+	 * String registration(@ModelAttribute("userForm") User userForm, BindingResult
+	 * bindingResult, Model model) { userValidator.validate(userForm,
+	 * bindingResult);
+	 * 
+	 * if (bindingResult.hasErrors()) { return "registration"; }
+	 * 
+	 * userService.save(userForm);
+	 * 
+	 * securityService.autologin(userForm.getUsername(), userForm.getPassword());
+	 * 
+	 * return "redirect:/dashboard"; }
+	 */
 
-        if (bindingResult.hasErrors()) {
-            return "registration";
-        }
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	public String login() {
+		return "login";
+	}
 
-        userService.save(userForm);
+	@PostMapping("/usersdel/{id}")
+	public String delUser(@PathVariable String id, ModelMap model) {
+		Long count = userService.getSize();
+		if (count > 1) {
+			varMsg = "Utilisteur supprime avec succes!";
+			userService.delId(Integer.valueOf(id));
+		} else {
+			varErr = "Impossible de supprimer Minimum 1";
+		}
+		return "redirect:/users";
+	}
 
-        securityService.autologin(userForm.getUsername(), userForm.getPassword());
-
-        return "redirect:/dashboard";
-    }
-    */
-
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login(){
-         return "login";
-    }
-
-  
-    
-    /*Init the first user if needed */
-    @RequestMapping(value = {"/first_user"}, method = RequestMethod.GET)
-    private void first_user() {
+	/* Init the first user if needed */
+	@RequestMapping(value = { "/first_user" }, method = RequestMethod.GET)
+	private void first_user() {
 		System.out.println("Init first user!");
-		if( userService.findByUsername("xavier") == null) {
-		loadRoles();
-		loadUsers();
-		assignUsersToAdminRole();
+		if (userService.findByUsername("xavier") == null) {
+			loadRoles();
+			loadUsers();
+			assignUsersToAdminRole();
 			System.out.println("First user created!");
 		} else {
 			System.out.println("no need to do this!");
 		}
 
 	}
-	private  void loadRoles() {
 
-        Role role = new Role();
-        role.setRole("CUSTOMER");
-        roleService.saveOrUpdate(role);
-        Role adminRole = new Role();
-        adminRole.setRole("ADMIN");
-        roleService.saveOrUpdate(adminRole);
-    }
-    private void loadUsers() {
-        User user1 = new User();
-        user1.setUsername("xavier");
-        // user1.setEncryptedPassword(bCryptPasswordEncoder.encode("xav123") );
-        user1.setPassword("xav123");
-        userService.save(user1);
-    }
-    private  void assignUsersToAdminRole() {
-        List<Role> roles = (List<Role>) roleService.listAll();
-        List<User> users = (List<User>) userService.listAll();
+	private void loadRoles() {
 
-        roles.forEach(role -> {
-            if (role.getRole().equalsIgnoreCase("ADMIN")) {
-                users.forEach(user -> {
-                    if (user.getUsername().equalsIgnoreCase("bschuster")) {
-                        user.addRole(role);
-                        userService.save(user);
-                    }
-                });
-            }
-        });
-    }
+		Role role = new Role();
+		role.setRole("CUSTOMER");
+		roleService.saveOrUpdate(role);
+		Role adminRole = new Role();
+		adminRole.setRole("ADMIN");
+		roleService.saveOrUpdate(adminRole);
+	}
+
+	private void loadUsers() {
+		User user1 = new User();
+		user1.setUsername("xavier");
+		// user1.setEncryptedPassword(bCryptPasswordEncoder.encode("xav123") );
+		user1.setPassword("xav123");
+		userService.save(user1);
+	}
+
+	private void assignUsersToAdminRole() {
+		List<Role> roles = (List<Role>) roleService.listAll();
+		List<User> users = (List<User>) userService.listAll();
+
+		roles.forEach(role -> {
+			if (role.getRole().equalsIgnoreCase("ADMIN")) {
+				users.forEach(user -> {
+					if (user.getUsername().equalsIgnoreCase("bschuster")) {
+						user.addRole(role);
+						userService.save(user);
+					}
+				});
+			}
+		});
+	}
 }

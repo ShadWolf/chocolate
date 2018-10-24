@@ -11,7 +11,7 @@ public class MainController {
 
 	@RequestMapping(value = { "/" }, method = RequestMethod.GET)
 	public String welcome(Model model) {
-		return "redirect:/login";
+		return "redirect:/dashboard";
 	}
 
 	@RequestMapping("/dashboard")

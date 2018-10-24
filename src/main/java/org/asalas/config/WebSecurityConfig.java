@@ -1,5 +1,7 @@
 package org.asalas.config;
 
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,11 +12,16 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+	@Autowired
+	DataSource dataSource;
+	
 	@Autowired
 	private UserDetailsService userDetailsService;
 
@@ -44,10 +51,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 				.antMatchers("/resources", "/login", "/templates/**", "/webjars/**", "/vendor/**", "/css/**")
 				.permitAll().anyRequest().authenticated()
-				.and().authorizeRequests().antMatchers("/**").hasAnyRole("ADMIN", "CUSTOMER")
-				.and().formLogin().loginPage("/login")
-				.successForwardUrl("/dashboard")
-				.and().logout().permitAll().logoutSuccessUrl("/login");
+				.and()
+					.authorizeRequests().antMatchers("/**").hasAnyRole("ADMIN", "CUSTOMER")
+				.and()
+					.formLogin()
+					.loginPage("/login")
+					.successForwardUrl("/dashboard")
+				.and()
+			      .rememberMe()
+			        .tokenRepository(persistentTokenRepository())
+			        .key("AppKey")
+			        .alwaysRemember(true)
+			        .rememberMeParameter("remember-me")
+			        .rememberMeCookieName("chocolate-remember-me")
+			        .tokenValiditySeconds(24 * 60 * 60)
+			     .and().logout().permitAll().logoutSuccessUrl("/login")
+				;
 		http.csrf().disable();
 		http.headers().frameOptions().disable();
 	}
@@ -55,5 +74,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
+	}
+	@Bean
+	public PersistentTokenRepository persistentTokenRepository() {
+	    JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+	    tokenRepository.setDataSource(dataSource);
+	    return tokenRepository;
 	}
 }

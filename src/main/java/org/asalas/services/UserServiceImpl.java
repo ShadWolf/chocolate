@@ -36,4 +36,12 @@ public class UserServiceImpl implements UserService {
    public List<User> listAll(){
     	return userRepository.findAll();
     }
+    @Override
+    public void delId(Integer id) {
+    	userRepository.deleteById(id);
+    }
+    @Override
+    public Long getSize() {
+    	return userRepository.count();
+    }
 }
