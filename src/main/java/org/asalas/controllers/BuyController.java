@@ -114,7 +114,7 @@ public class BuyController {
 		Achat a = this.convAchatFormToAchat(form);
 		achatService.save(a);
 		this.varMsg = "Achat enregistre avec succes!";
-		return showBuy(model);
+		return "redirect:/buyform";
 	}
 	private Achat convAchatFormToAchat( AchatForm form ) {
 		Achat a = new Achat();

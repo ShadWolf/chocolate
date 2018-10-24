@@ -27,6 +27,18 @@ public class IngsController {
 	
 	private String varMsg;
 	//list + form
+	@GetMapping("/ingmsg")
+	public String showIngsMsg(ModelMap model) {
+		IngsForm ingform =  new IngsForm();
+	  	List<IngsForm> ifl = createListIngsForm();
+	  	List<UnityForm> ufl =  createListUnitForm();
+	  	model.addAttribute("varMsg", varMsg);
+    	model.addAttribute("page", "ingsform");
+    	model.addAttribute("varList", ifl);
+    	model.addAttribute("varListSec", ufl);
+    	model.addAttribute("varForm", ingform );
+		return "mainpage";
+	}  
 	@GetMapping("/ingform")
 	public String showIngs(ModelMap model) {
 		IngsForm ingform =  new IngsForm();
@@ -95,14 +107,7 @@ public class IngsController {
 	    	
 	    	//model.addAttribute("page", "unitform");
 	    	this.varMsg = "Unite enregistre avec succes!";
-	    /*	model.addAttribute("varMsg", msg);
-	    	List<IngsForm> ifl =  createListIngsForm();
-	    	model.addAttribute("varList", ifl);
-	    	IngsForm form = new IngsForm();
-	    	model.addAttribute("varForm", form );
-	    	return "mainpage";*/
-			//return "redirect:/ingform";
-	    	return showIngs(model);
+			return "redirect:/ingmsg";
 		}
 		
 		private Ingredient convIngFormToIngredient(IngsForm form) {
@@ -118,6 +123,6 @@ public class IngsController {
 		public String delIng(@PathVariable String id, ModelMap model) {
 			varMsg = "Ingredient supprimee avec succes!"; 
 			ingserv.delId(Integer.valueOf(id));
-			return showIngs(model);
+			return "redirect:/ingmsg";
 		}
 }

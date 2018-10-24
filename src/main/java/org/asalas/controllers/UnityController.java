@@ -21,14 +21,39 @@ public class UnityController {
 	private UnityService unityService;
 	
 	 private String varMsg;
-	// List Unity + formulario
+	
+	 @GetMapping("/unitmsg")
+		public String showUnityMsg(ModelMap model){
+			
+		  	UnityForm unitform =  new UnityForm();
+		  	List<UnityForm> ufl = createListUnityForm();
+	    	model.addAttribute("page", "unitform");
+	    	model.addAttribute("varMsg", varMsg);
+	    	model.addAttribute("varList", ufl);
+	    	model.addAttribute("varForm", unitform );
+	    	/*
+	    	 * NOTA BENE:
+	    	 le formulaire doit comporter un objet special qui lui permetra de recuperer les donnes de maniere 
+	    	 numerique et permetra en post traitement de convertir ses données en objet 
+	    	 
+	    	 par example ici dans le formulaire on a besoin de recuprer l'id de l unite de base parent.
+	    	 Pour en suite pouvoir aller chercher cette unité de base et la stocke dans un objet avant de sauvegarder 
+	    	 a nouveau l unité de base.
+	    	 	L' objet unityFrom ici servira d intermediare thymeleaf le renvera rempli 
+	    	 	et la methode addunit traitera la conversion de set objet simplifier en objet definitif de notre 
+	    	 	base de donnee.
+	    	 * */
+	    	return "mainpage";
+		}
+	 
+	 // List Unity + formulario
+	
 	@GetMapping("/unitform")
 	public String showUnityForm(ModelMap model){
 		
 	  	UnityForm unitform =  new UnityForm();
 	  	List<UnityForm> ufl = createListUnityForm();
     	model.addAttribute("page", "unitform");
-    	model.addAttribute("varMsg", varMsg);
     	model.addAttribute("varList", ufl);
     	model.addAttribute("varForm", unitform );
     	/*
@@ -72,25 +97,12 @@ public class UnityController {
 	// Add Unity
 	@PostMapping("/unitadd")
 	public String addUnity(@ModelAttribute UnityForm unitForm, ModelMap model) {
-		String msg = null ;
-    	System.out.println("getUniyForm" + unitForm.toString());
-    	
     	Unity u = this.convUnityFormToUnity(unitForm);
     	
     	unityService.save( u );
-  
-    	//unit.setConvunit(UnityService.getById(unitForm.getUnitid()));
-    	
-    	
-    	model.addAttribute("page", "unitform");
-    	msg = "Unite enregistre avec succes!";
-    	model.addAttribute("varMsg", msg);
-    	List<UnityForm> ufl = createListUnityForm();
-    	model.addAttribute("varList", ufl);
-    	UnityForm unitform = new UnityForm();
-    	model.addAttribute("varForm", unitform );
-    	return "mainpage";
-		// return "mainpage";
+    	varMsg = "Unite enregistre avec succes!";
+    	return "redirect:/unitmsg";
+		
 	}
 	
 	private Unity convUnityFormToUnity(UnityForm uform){
@@ -116,6 +128,6 @@ public class UnityController {
 	public String delUnity(@PathVariable String id, ModelMap model) {
 		varMsg = "Unite supprimee avec succes!";
 		unityService.delId(Integer.valueOf(id));
-		return "redirect:/unitform";
+		return "redirect:/unitmsg";
 	}
 }
