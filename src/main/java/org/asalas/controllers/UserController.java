@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -45,48 +46,49 @@ public class UserController {
 	public String showUsers(ModelMap model) {
 		User user = new User();
 		model.addAttribute("page", "users");
+		model.addAttribute("varList", userService.listAll());
+		model.addAttribute("varForm", user);
+		return "mainpage";
+	}
+
+	@RequestMapping("/usersmsg")
+	public String showUsersMsg(ModelMap model) {
+		User user = new User();
+		model.addAttribute("page", "users");
 		model.addAttribute("varMsg", varMsg);
 		model.addAttribute("varErr", varErr);
 		model.addAttribute("varList", userService.listAll());
 		model.addAttribute("varForm", user);
 		return "mainpage";
 	}
-	/*
-	 * @RequestMapping(value = "/registration", method = RequestMethod.GET) public
-	 * String registration(Model model) { model.addAttribute("userForm", new
-	 * User());
-	 * 
-	 * return "registration"; }
-	 * 
-	 * @RequestMapping(value = "/registration", method = RequestMethod.POST) public
-	 * String registration(@ModelAttribute("userForm") User userForm, BindingResult
-	 * bindingResult, Model model) { userValidator.validate(userForm,
-	 * bindingResult);
-	 * 
-	 * if (bindingResult.hasErrors()) { return "registration"; }
-	 * 
-	 * userService.save(userForm);
-	 * 
-	 * securityService.autologin(userForm.getUsername(), userForm.getPassword());
-	 * 
-	 * return "redirect:/dashboard"; }
-	 */
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login() {
 		return "login";
 	}
+	@PostMapping("/usermod")
+	public String modUser(@ModelAttribute User u, ModelMap model) {
+		varMsg = "Utilisateur " + u.getUsername() + " modifie avec succes!";
+		userService.modEncPass(u);
+		return "redirect:/usersmsg";
+	}
+	@PostMapping("/useradd")
+	public String addUser(@ModelAttribute User u, ModelMap model) {
+		varMsg = "Utilisateur " + u.getUsername() + " ajoute avec succes!";
+		userService.save(u);
+		return "redirect:/usersmsg";
+	}
 
-	@PostMapping("/usersdel/{id}")
-	public String delUser(@PathVariable String id, ModelMap model) {
+	@GetMapping("/usersdel/{id}")
+	public String delUser(@PathVariable String id, ModelMap model) {	
 		Long count = userService.getSize();
 		if (count > 1) {
-			varMsg = "Utilisteur supprime avec succes!";
-			userService.delId(Integer.valueOf(id));
+				varMsg = "Utilisteur" + userService.delId(Integer.valueOf(id)) + "supprime avec succes!";	
+			
 		} else {
 			varErr = "Impossible de supprimer Minimum 1";
 		}
-		return "redirect:/users";
+		return "redirect:/usersmsg";
 	}
 
 	/* Init the first user if needed */

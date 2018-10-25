@@ -8,9 +8,10 @@ import org.springframework.stereotype.Service;
 @Service
 public interface UserService {
     public void save(User user);
-
+    public User findById(Integer id);
     public User findByUsername(String username);
     public List<User> listAll();
-    public void delId(Integer id);
+    public String delId(Integer id);
     public Long getSize();
+    public void modEncPass(User u);
 }

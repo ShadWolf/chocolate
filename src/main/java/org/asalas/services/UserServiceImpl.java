@@ -24,12 +24,16 @@ public class UserServiceImpl implements UserService {
         
         user.setRoles(roleRepository.findAll());
         
-        userRepository.save(user);
+        userRepository .save(user);
     }
 
     @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+    @Override
+    public User findById(Integer id) {
+        return userRepository.findById(id).orElse(null);
     }
     
     @Override
@@ -37,11 +41,19 @@ public class UserServiceImpl implements UserService {
     	return userRepository.findAll();
     }
     @Override
-    public void delId(Integer id) {
+    public String delId(Integer id) {
+    	User u = findById(id);
+    	String uname = u.getUsername();
     	userRepository.deleteById(id);
+    	return uname;
     }
     @Override
     public Long getSize() {
     	return userRepository.count();
+    }
+    public void modEncPass(User u) {
+    	String encpaswd = bCryptPasswordEncoder.encode(u.getPassword());
+    	User b = findByUsername(u.getUsername());
+    	userRepository.modEncPass(b.getId(), encpaswd);
     }
 }
