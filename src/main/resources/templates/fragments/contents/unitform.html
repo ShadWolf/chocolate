@@ -12,11 +12,6 @@
 					<li class="breadcrumb-item"><a href="/stocks">Stocks</a></li>
 					<li class="breadcrumb-item active">Unit&eacute; de mesure</li>
 				</ol>
-				<!-- mESSAGE ok -->
-				<div class="alert alert-success"
-					th:if="${not #strings.isEmpty(varMsg)}">
-					<p th:text="${varMsg}"></p>
-				</div>
 				<!-- Lista de unidades -->
 				<div th:if="${not #lists.isEmpty(varList)}">
 
@@ -50,7 +45,7 @@
 				</div>
 
 
-				<div th:unless="${not #lists.isEmpty(varList)}">
+				<div th:unless="${not #lists.isEmpty(varList)}" class="alert alert-info">
 					<h3>Il n'existe pas d'unit&eacute; de mesure
 						enregistr&eacute;e!</h3>
 				</div>

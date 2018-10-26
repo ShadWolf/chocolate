@@ -37,7 +37,9 @@ public class IngServiceImpl implements IngService {
 		}
 		
 		@Override
-		public void delId(Integer id) {
+		public String delId(Integer id) {
+			Ingredient i = repo.findById2(id);
 			repo.deleteById(id);
+			return i.getName();
 		}
 }

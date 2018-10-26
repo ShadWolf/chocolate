@@ -23,8 +23,9 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 		// TODO Auto-generated method stub
-		System.out.println("Init first user!");
-		if( userServ.findByUsername("xavier") == null) {
+		Long sz = userServ.getSize();
+		System.out.println("Init first user! size:" +  sz);
+		if( sz == 0L) {
 		loadRoles();
 		loadUsers();
 		assignUsersToAdminRole();

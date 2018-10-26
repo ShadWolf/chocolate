@@ -13,5 +13,5 @@ public interface UnityService {
     Unity findById(Integer id);
     List<Unity> listAll();
 
-	void delId(Integer id);
+	String delId(Integer id);
 }

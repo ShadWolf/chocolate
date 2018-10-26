@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.asalas.domain.Unity;
+import org.asalas.forms.MsgForm;
 import org.asalas.forms.UnityForm;
 import org.asalas.services.UnityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 @Controller
 public class UnityController {
@@ -22,29 +26,7 @@ public class UnityController {
 	
 	 private String varMsg;
 	
-	 @GetMapping("/unitmsg")
-		public String showUnityMsg(ModelMap model){
-			
-		  	UnityForm unitform =  new UnityForm();
-		  	List<UnityForm> ufl = createListUnityForm();
-	    	model.addAttribute("page", "unitform");
-	    	model.addAttribute("varMsg", varMsg);
-	    	model.addAttribute("varList", ufl);
-	    	model.addAttribute("varForm", unitform );
-	    	/*
-	    	 * NOTA BENE:
-	    	 le formulaire doit comporter un objet special qui lui permetra de recuperer les donnes de maniere 
-	    	 numerique et permetra en post traitement de convertir ses données en objet 
-	    	 
-	    	 par example ici dans le formulaire on a besoin de recuprer l'id de l unite de base parent.
-	    	 Pour en suite pouvoir aller chercher cette unité de base et la stocke dans un objet avant de sauvegarder 
-	    	 a nouveau l unité de base.
-	    	 	L' objet unityFrom ici servira d intermediare thymeleaf le renvera rempli 
-	    	 	et la methode addunit traitera la conversion de set objet simplifier en objet definitif de notre 
-	    	 	base de donnee.
-	    	 * */
-	    	return "mainpage";
-		}
+	 
 	 
 	 // List Unity + formulario
 	
@@ -96,12 +78,19 @@ public class UnityController {
 
 	// Add Unity
 	@PostMapping("/unitadd")
-	public String addUnity(@ModelAttribute UnityForm unitForm, ModelMap model) {
+	public String addUnity(@ModelAttribute UnityForm unitForm,
+			RedirectAttributes redirectAttributes) {
     	Unity u = this.convUnityFormToUnity(unitForm);
     	
     	unityService.save( u );
     	varMsg = "Unite enregistre avec succes!";
-    	return "redirect:/unitmsg";
+    	MsgForm f = new MsgForm();
+    	f.setNextpage("unitform");
+    	f.setMsg(varMsg);
+    	
+    	redirectAttributes.addFlashAttribute("f", f);
+    	 
+    	return "redirect:/msg";
 		
 	}
 	
@@ -125,9 +114,14 @@ public class UnityController {
 
 		// Remove Unity
 	@PostMapping("/unitdel/{id}")
-	public String delUnity(@PathVariable String id, ModelMap model) {
-		varMsg = "Unite supprimee avec succes!";
-		unityService.delId(Integer.valueOf(id));
-		return "redirect:/unitmsg";
+	public String delUnity(@PathVariable String id, 
+			RedirectAttributes redirectAttributes) {
+		varMsg = "Unite " + 	unityService.delId(Integer.valueOf(id)) + " supprimee avec succes!";
+	
+		MsgForm f = new MsgForm();
+    	f.setNextpage("unitform");
+    	f.setMsg(varMsg);
+    	redirectAttributes.addFlashAttribute("f", f);
+    	return "redirect:/msg";
 	}
 }

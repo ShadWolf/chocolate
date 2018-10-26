@@ -14,7 +14,5 @@ public interface AchatService {
     List<Achat> findAllByIngredent(Ingredient ing);
     Achat findById(Integer id);
     List<Achat> listAll();
-
-	void delId(Integer id);
 }
 

@@ -5,7 +5,7 @@
 </head>
 <body>
 	<!-- Gestion utilisateur-->
-	<div th:fragment="users">
+	<div th:fragment="receip">
 		<div class="content-wrapper">
 			<div class="container-fluid">
 
@@ -14,7 +14,15 @@
 					<li class="breadcrumb-item"><a href="#">Dashboard</a></li>
 					<li class="breadcrumb-item active">Utilisateurs</li>
 				</ol>
-			
+				<!-- mESSAGE ok -->
+				<div class="alert alert-success"
+					th:if="${not #strings.isEmpty(varMsg)}">
+					<p th:text="${varMsg}"></p>
+				</div>
+				<div class="alert alert-danger"
+					th:if="${not #strings.isEmpty(varErr)}">
+					<p th:text="${varErr}"></p>
+				</div>
 				<!-- Lista de usuarios -->
 				<div th:if="${not #lists.isEmpty(varList)}">
 					<h2>Liste des Utilisateurs</h2>

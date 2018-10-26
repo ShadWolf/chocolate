@@ -37,8 +37,10 @@ public class UnityServiceImpl implements UnityService {
 	}
 	
 	@Override
-	public void delId(Integer id) {
+	public String delId(Integer id) {
+		Unity u = repo.findById2(id);
 		repo.deleteById(id);
+		return u.getName();
 	}
 
 }

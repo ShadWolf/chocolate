@@ -1,0 +1,36 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head></head>
+<body>
+	<!-- Gestion utilisateur-->
+	<div th:fragment="msgview">
+		<div class="content-wrapper">
+			<div class="container-fluid">
+				<!-- Breadcrumbs-->
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+					<li class="breadcrumb-item"><a href="/stocks">Stocks</a></li>
+					<li class="breadcrumb-item active" th:text="${varForm}" ></li>
+				</ol>
+					<!-- mESSAGE ok -->
+				<div class="alert alert-success"
+					th:if="${not #strings.isEmpty(varMsg)}">
+					<p th:text="${varMsg}"></p>
+				</div>
+				<div class="alert alert-danger"
+					th:if="${not #strings.isEmpty(varErr)}">
+					<p th:text="${varErr}"></p>
+				</div>
+				<input type="hidden" id="nextpage" th:value="${varForm}"></input>
+				<script  type="text/javascript">
+			setTimeout( function() {
+				var url = "/" + $('#nextpage').val(); 
+				document.location.href = url;
+			}, 10000);	
+	</script>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

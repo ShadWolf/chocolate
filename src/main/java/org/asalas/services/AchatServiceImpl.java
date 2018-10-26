@@ -35,9 +35,4 @@ public class AchatServiceImpl implements AchatService {
 	public List<Achat> listAll(){
 		return repo.findAll();
 	}
-
-	@Override
-	public void delId(Integer id) {
-		repo.deleteById(id);
-	}
 }

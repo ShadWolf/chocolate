@@ -14,5 +14,5 @@ public interface IngService {
 	Ingredient findById(Integer id);
     List<Ingredient> listAll();
 
-	void delId(Integer id);
+	String delId(Integer id);
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.asalas.domain.Role;
 import org.asalas.domain.User;
+import org.asalas.forms.MsgForm;
 import org.asalas.services.RoleService;
 import org.asalas.services.SecurityService;
 import org.asalas.services.UserService;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -51,44 +53,56 @@ public class UserController {
 		return "mainpage";
 	}
 
-	@RequestMapping("/usersmsg")
-	public String showUsersMsg(ModelMap model) {
-		User user = new User();
-		model.addAttribute("page", "users");
-		model.addAttribute("varMsg", varMsg);
-		model.addAttribute("varErr", varErr);
-		model.addAttribute("varList", userService.listAll());
-		model.addAttribute("varForm", user);
-		return "mainpage";
-	}
-
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login() {
 		return "login";
 	}
+
 	@PostMapping("/usermod")
-	public String modUser(@ModelAttribute User u, ModelMap model) {
+	public String modUser(@ModelAttribute User u, RedirectAttributes redirectAttributes) {
+		varErr = null;
 		varMsg = "Utilisateur " + u.getUsername() + " modifie avec succes!";
 		userService.modEncPass(u);
-		return "redirect:/usersmsg";
+		MsgForm f = new MsgForm();
+		f.setNextpage("users");
+		f.setMsg(varMsg);
+		redirectAttributes.addFlashAttribute("f", f);
+		return "redirect:/msg";
 	}
+
 	@PostMapping("/useradd")
-	public String addUser(@ModelAttribute User u, ModelMap model) {
+	public String addUser(@ModelAttribute User u, RedirectAttributes redirectAttributes) {
 		varMsg = "Utilisateur " + u.getUsername() + " ajoute avec succes!";
+		varErr = null;
 		userService.save(u);
-		return "redirect:/usersmsg";
+		MsgForm f = new MsgForm();
+		f.setNextpage("users");
+		f.setMsg(varMsg);
+		redirectAttributes.addFlashAttribute("f", f);
+		return "redirect:/msg";
 	}
 
 	@GetMapping("/usersdel/{id}")
-	public String delUser(@PathVariable String id, ModelMap model) {	
+	public String delUser(@PathVariable String id, RedirectAttributes redirectAttributes) {
 		Long count = userService.getSize();
+		varMsg = null;
+		varErr = null;
 		if (count > 1) {
-				varMsg = "Utilisteur" + userService.delId(Integer.valueOf(id)) + "supprime avec succes!";	
-			
+			varMsg = "Utilisteur " + userService.delId(Integer.valueOf(id)) + " supprime avec succes!";
+
 		} else {
 			varErr = "Impossible de supprimer Minimum 1";
 		}
-		return "redirect:/usersmsg";
+		MsgForm f = new MsgForm();
+		f.setNextpage("users");
+		if (varMsg != null) {
+			f.setMsg(varMsg);
+		}
+		if (varErr != null) {
+			f.setErr(varErr);
+		}
+		redirectAttributes.addFlashAttribute("f", f);
+		return "redirect:/msg";
 	}
 
 	/* Init the first user if needed */

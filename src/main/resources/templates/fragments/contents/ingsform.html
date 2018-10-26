@@ -50,7 +50,7 @@
 						</tr>
 					</table>
 				</div>
-				<div th:unless="${not #lists.isEmpty(varList)}">
+				<div th:unless="${not #lists.isEmpty(varList)}" class="alert alert-info">
 					<h3>Il n'existe pas d'ingr&eacute;dient enregistr&eacute;e!</h3>
 				</div>
 				<div th:if="${not #lists.isEmpty(varListSec)}">
